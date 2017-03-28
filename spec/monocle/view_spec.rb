@@ -14,6 +14,21 @@ RSpec.describe Monocle::View do
     end
   end
 
+  describe "#materialized?" do
+    context "with a materialized view" do
+      it "returns true" do
+        expect(subject.materialized?).to eq true
+      end
+    end
+
+    context "with a normal view" do
+      subject { described_class.new "normal_view" }
+      it "returns false" do
+        expect(subject.materialized?).to eq false
+      end
+    end
+  end
+
   describe "#drop" do
     it "calls #execute with drop_command" do
       subject.expects(:execute).with(subject.drop_command).once
