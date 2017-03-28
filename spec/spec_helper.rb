@@ -2,6 +2,7 @@ require "bundler/setup"
 require 'dotenv/load'
 require "monocle"
 require "pry"
+require 'database_cleaner'
 
 Dir[File.join(Monocle.root, 'spec/support/**/*.rb')].each { |f| require f }
 
@@ -15,7 +16,16 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
     DatabaseUtils.setup
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 
   config.after(:suite) do

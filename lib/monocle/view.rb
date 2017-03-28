@@ -5,7 +5,6 @@ module Monocle
     attr_accessor :dependants
 
     delegate :views_path, :list, :versions, :logger, to: Monocle
-    delegate :execute, to: ActiveRecord::Base.connection
     delegate :info, :warn, :error, :debug, to: :logger
 
     def initialize(name)
@@ -85,6 +84,9 @@ module Monocle
       flatten.map { |s| list.fetch s.to_sym }
     end
 
+    def execute(sql)
+      ActiveRecord::Base.connection.execute(sql)
+    end
   end
 
 end

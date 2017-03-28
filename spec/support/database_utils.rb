@@ -11,17 +11,16 @@ module DatabaseUtils
   end
 
   def self.setup
-    `createdb #{ENV["MONOCLE_DB_NAME"]}`
     establish_connection
     sql = <<-EOSQL
-      CREATE TABLE public.monocle_migrations
+      CREATE TABLE IF NOT EXISTS public.monocle_migrations
       (
         version character varying
       )
       WITH (
         OIDS=FALSE
       );
-      CREATE UNIQUE INDEX index_monocle_migrations_on_version
+      CREATE UNIQUE INDEX IF NOT EXISTS index_monocle_migrations_on_version
       ON public.monocle_migrations
       USING btree
       (version COLLATE pg_catalog."default");
@@ -31,6 +30,5 @@ module DatabaseUtils
 
   def self.teardown
     ActiveRecord::Base.connection.close
-    `dropdb #{ENV["MONOCLE_DB_NAME"]}`
   end
 end
