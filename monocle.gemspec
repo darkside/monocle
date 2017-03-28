@@ -35,6 +35,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "mocha"
   spec.add_development_dependency "pry-nav"
+  spec.add_development_dependency "dotenv"
+  spec.add_development_dependency "pg"
 
   spec.add_dependency "activesupport", ">= 4", "< 6"
   spec.add_dependency "activerecord", ">= 4",  "< 6"

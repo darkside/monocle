@@ -1,6 +1,9 @@
 require "bundler/setup"
+require 'dotenv/load'
 require "monocle"
 require "pry"
+
+Dir[File.join(Monocle.root, 'spec/support/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -9,5 +12,13 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.before(:suite) do
+    DatabaseUtils.setup
+  end
+
+  config.after(:suite) do
+    DatabaseUtils.teardown
   end
 end

@@ -46,7 +46,7 @@ module Monocle
 
   def self.logger
     # FIXME: This will need to be configurable
-    @logger ||= Logger.new
+    @logger ||= Logger.new(STDERR)
   end
 
   def self.views_path
