@@ -9,7 +9,7 @@ Monocle works with or without Rails, all it assumes is you're using ActiveRecord
 
 At [InvitedHome](http://invitedhome.com/) we needed an easy to use system to manage a bunch of complex views (often materialized) that we use for things like caching. 
 
-The only gem that did something similar at the time was Thoughtbot's [Scenic](https://github.com/thoughtbot/scenic), but we didn't like some of it's features such as how it would generate multiple versions of the same view's SQL.
+The only gem that did something similar at the time was Thoughtbot's [Scenic](https://github.com/thoughtbot/scenic), but we didn't like some of its features such as how it would generate multiple versions of the same view's SQL.
 
 We wanted something way simpler, one SQL file per view, versioning maintained by a timestamp at the top of the file. Thus, Monocle was born.
 
@@ -51,7 +51,7 @@ With Rails, you can use the generator:
 
     $ rails g monocle:view view_name
     
-This will generate a monocle SQL template and a model. You can skip creating the model with `--skip-model`.
+This will generate a Monocle SQL template and a model. You can skip creating the model with `--skip-model`.
 
 ### Generating a materialized view
 
@@ -59,7 +59,7 @@ With Rails, you can use the generator:
 
     $ rails g monocle:matview view_name
     
-This will generate a monocle materialized SQL template and a model. You can skip creating the model with `--skip-model`.
+This will generate a Monocle materialized SQL template and a model. You can skip creating the model with `--skip-model`.
 
 ## Included Rake Tasks
 
