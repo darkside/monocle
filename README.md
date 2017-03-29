@@ -1,7 +1,17 @@
 <img align="left" src="https://lh3.googleusercontent.com/SoJ_7q3soZxT97yNmlBx8eFqs7iXH_azC1H9vXCsglXq5GaR6rXCtf9Xzq42fJTAg7gL=s107"></img>
 # Monocle
 
-Monocle helps you tame your database views by keeping the SQLs versioned neatly in your project and knowing when and how to migrate them if necessary.
+Monocle helps you tame your database views by keeping the SQLs versioned neatly in your project and knowing when and how to migrate them if necessary. It knows how to deal with PostgreSQL materialized views and dependencies (view A points to view B) as well as regular views.
+
+Monocle works with or without Rails, all it assumes is you're using ActiveRecord. See #Usage for more details.
+
+## Reasoning
+
+At [InvitedHome](http://invitedhome.com/) we needed an easy to use system to manage a bunch of complex views (often materialized) that we use for things like caching. 
+
+The only gem that did something similar at the time was Thoughtbot's [Scenic](https://github.com/thoughtbot/scenic), but we didn't like some of it's features such as how it would generate multiple versions of the same view's SQL.
+
+We wanted something way simpler, one SQL file per view, versioning maintained by a timestamp at the top of the file. Thus, Monocle was born.
 
 ## Installation
 
