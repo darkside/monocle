@@ -48,14 +48,22 @@ module Monocle
 
   def self.logger
     # FIXME: This will need to be configurable
-    @logger ||= Logger.new(STDOUT).tap do |logger|
-      logger.level = Logger::ERROR
+    @logger ||= if defined?(Rails)
+      Rails.logger
+    else
+      Logger.new(STDOUT).tap do |logger|
+        logger.level = Logger::ERROR
+      end
     end
   end
 
   def self.views_path
     # FIXME: This will need to be configurable
-    File.join Monocle.root, "db/views"
+    @views_path ||= if defined?(Rails)
+      File.join Rails.root, "db/views"
+    else
+      File.join Monocle.root, "db/views"
+    end
   end
 
   def self.root
