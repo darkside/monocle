@@ -7,6 +7,5 @@ module Monocle
     generators do
       Dir[File.join(Monocle.root, "lib/monocle/generators/*.rb")].each { |f| require f }
     end
-
   end
 end

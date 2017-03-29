@@ -7,12 +7,12 @@ module Monocle::Generators
 
     def generate_sql_file
       create_file "db/views/#{file_name}.sql" do
-        <<-EOF
-        -- Timestamp: #{Time.now}
-        CREATE MATERIALIZED VIEW #{file_name} AS
-        -- Add your stuff here
-        ;
-        EOF
+<<-EOF
+-- Timestamp: #{Time.now}
+CREATE MATERIALIZED VIEW #{file_name} AS
+-- Add your stuff here
+;
+EOF
       end
     end
 
