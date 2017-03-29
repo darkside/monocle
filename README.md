@@ -18,7 +18,7 @@ We wanted something way simpler, one SQL file per view, versioning maintained by
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'monocle'
+gem 'ar-monocle', require: 'monocle'
 ```
 
 And then execute:
@@ -27,7 +27,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install monocle
+    $ gem install ar-monocle
     
 ## Setup
 
