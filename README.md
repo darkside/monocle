@@ -33,6 +33,8 @@ The basic gist is you have a `db/views` in your project which contains all the v
 
 Monocle knows about view dependencies and will drop and recreate dependants as necessary. So if you have a view A that references a view B and you need to upgrade view B, it will drop view A first, then drop and create view B, then create view A.
 
+## Included Generators (for Rails)
+
 ### Generating a view
 
 With Rails, you can use the generator:
@@ -48,6 +50,28 @@ With Rails, you can use the generator:
     $ rails g monocle:matview view_name
     
 This will generate a monocle materialized SQL template and a model. You can skip creating the model with `--skip-model`.
+
+## Included Rake Tasks
+
+### List all views
+
+You can use `rake monocle:list` to see all the view names that are being managed by Monocle.
+
+### List all migrated view slugs
+
+You can use `rake monocle:versions` to see all the view slugs that have been migrated by Monocle.
+
+### Migrate views
+
+You can use `rake monocle:migrate` to migrate any views that have a new timestamp. I recommend you hook this to your deployment process i.e after you call `rake db:migrate`
+
+### Bumping a view timestamp
+
+With monocle, you decide when it's time to upgrade a view. So even if you have an updated view definition that you're working on, it won't actually change it unless the timestamp has changed. To bump a view timestamp, you can either do it yourself by changing the first line of the template or use the supplied rake task: 
+
+    $ rake monocle:bump[my_view_name]
+    
+It will automatically bump that view's timestamp to the current time.
 
 ## Development
 
