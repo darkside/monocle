@@ -1,6 +1,7 @@
+<img align="left" src="https://lh3.googleusercontent.com/SoJ_7q3soZxT97yNmlBx8eFqs7iXH_azC1H9vXCsglXq5GaR6rXCtf9Xzq42fJTAg7gL=s107"></img>
 # Monocle
 
-![Monocle](https://lh3.googleusercontent.com/SoJ_7q3soZxT97yNmlBx8eFqs7iXH_azC1H9vXCsglXq5GaR6rXCtf9Xzq42fJTAg7gL=s107) Monocle helps you tame your database views by keeping the SQLs versioned neatly in your project and knowing when and how to migrate them if necessary.
+Monocle helps you tame your database views by keeping the SQLs versioned neatly in your project and knowing when and how to migrate them if necessary.
 
 ## Installation
 
