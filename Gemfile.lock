@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    monocle (0.1.0)
+    ar-monocle (0.1.0)
       activerecord (>= 4, < 6)
       activesupport (>= 4, < 6)
       rake
@@ -62,11 +62,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ar-monocle!
   bundler (~> 1.14)
   database_cleaner
   dotenv
   mocha
-  monocle!
   pg
   pry-nav
   rspec (~> 3.0)

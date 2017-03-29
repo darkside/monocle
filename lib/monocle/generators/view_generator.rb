@@ -1,15 +1,15 @@
 require "rails/generators"
 
 module Monocle::Generators
-  class MatviewGenerator < Rails::Generators::NamedBase
-    desc "Creates a materialized view SQL template and optionally a model to go with it"
+  class ViewGenerator < Rails::Generators::NamedBase
+    desc "Creates a view SQL template and optionally a model to go with it"
     class_option :skip_model, type: :boolean, default: false, desc: "Skips model generation"
 
     def generate_sql_file
       create_file "db/views/#{file_name}.sql" do
         <<-EOF
         -- Timestamp: #{Time.now}
-        CREATE MATERIALIZED VIEW #{file_name} AS
+        CREATE OR REPLACE VIEW #{file_name} AS
         -- Add your stuff here
         ;
         EOF
