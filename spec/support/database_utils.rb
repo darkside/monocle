@@ -11,6 +11,7 @@ module DatabaseUtils
   end
 
   def self.setup
+    `dropdb #{ENV["MONOCLE_DB_NAME"]}; createdb #{ENV["MONOCLE_DB_NAME"]}`
     establish_connection
     sql = <<-EOSQL
       CREATE TABLE IF NOT EXISTS public.monocle_migrations

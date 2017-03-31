@@ -69,16 +69,17 @@ module Monocle
       File.expand_path(Dir.pwd)
     end
 
+    def fetch(view_name)
+      view_name = symbolize_name(view_name)
+      list.fetch(view_name)
+    end
+
     protected
 
     def configuration
       @configuration ||= Configuration.new
     end
 
-    def fetch(view_name)
-      view_name = symbolize_name(view_name)
-      list.fetch(view_name)
-    end
 
     def symbolize_name(name)
       name.is_a?(String) ? name.to_sym : name

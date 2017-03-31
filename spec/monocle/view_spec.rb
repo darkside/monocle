@@ -100,6 +100,18 @@ RSpec.describe Monocle::View do
   end
 
   describe "#migrate" do
+    context "when you have a new view that depends on another new view that wasn't created yet" do
+      subject { described_class.new('view_a') }
+      it "creates the dependant view first, then creates it" do
+        expect { subject.migrate }.not_to raise_error
+        binding.pry
+        view_a = Monocle.fetch("view_a")
+        view_b = Monocle.fetch("view_b")
+        expect(Monocle.versions).to include(view_a.slug)
+        expect(Monocle.versions).to include(view_b.slug)
+      end
+    end
+
     it "calls drop then migrate" do
       subject.expects(:drop).once.returns(true)
       subject.expects(:create).once.returns(true)

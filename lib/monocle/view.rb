@@ -40,6 +40,18 @@ module Monocle
       Migration.find_or_create_by version: slug
       dependants.each &:create
       true
+    rescue ActiveRecord::StatementInvalid => e
+      # We may have another new view coming that this view depend on
+      # if the relation name is included on our list of views, we create
+      # that first and then retry
+      if e.message =~ /PG::UndefinedTable/ &&
+         e.message.scan(/relation \"(\w+)\" does not exist/) &&
+         list.keys.include?($1.to_sym)
+         list.fetch($1.to_sym).create
+         retry
+      else
+        fail e
+      end
     end
 
     def migrate
