@@ -61,7 +61,7 @@ module Monocle
     end
 
     def views_path
-      @views_path ||= File.join(root, path_to_views)
+      File.join(root, path_to_views)
     end
 
     def root

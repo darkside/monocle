@@ -4,7 +4,7 @@ module Monocle
 
     # Define a custom logger
     def logger
-      @logger ||= (defined?(Rails) ? Rails.logger : Logger.new(STDOUT))
+      @logger ||= (defined?(Rails) ? Rails.logger : Logger.new('monocle.log'))
     end
 
     # The relative path to where views are stored, relative to the root of the
