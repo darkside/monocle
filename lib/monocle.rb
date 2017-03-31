@@ -2,6 +2,7 @@
 require "active_support/core_ext/module/delegation"
 require 'active_record'
 
+require 'monocle/configuration'
 require 'monocle/railtie' if defined?(Rails)
 
 require "monocle/version"

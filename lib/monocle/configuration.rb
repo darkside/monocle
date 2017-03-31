@@ -1,6 +1,6 @@
 module Monocle
   class Configuration
-    attr_accessor :views_path, :logger
+    attr_accessor :path_to_views, :logger
 
     # Define a custom logger
     def logger
@@ -10,7 +10,7 @@ module Monocle
     # The relative path to where views are stored, relative to the root of the
     # project
     def path_to_views
-      @views_path ||= "db/views"
+      @path_to_views ||= "db/views"
     end
   end
 end
