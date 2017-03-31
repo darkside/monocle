@@ -47,6 +47,7 @@ module Monocle
       if e.message =~ /PG::UndefinedTable/ &&
          e.message.scan(/relation \"(\w+)\" does not exist/) &&
          list.keys.include?($1.to_sym)
+         warn "Can't create #{name} because it depends on #{$1}, creating that first..."
          list.fetch($1.to_sym).create
          retry
       else

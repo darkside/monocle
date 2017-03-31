@@ -69,6 +69,11 @@ module Monocle
       File.expand_path(Dir.pwd)
     end
 
+    def gem_root
+      # Get the absolute path of our gem root
+      File.expand_path(File.dirname(__dir__))
+    end
+
     def fetch(view_name)
       view_name = symbolize_name(view_name)
       list.fetch(view_name)
