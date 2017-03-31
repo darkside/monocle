@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ar-monocle (0.1.0)
+    ar-monocle (0.1.1)
       activerecord (>= 4, < 6)
       activesupport (>= 4, < 6)
       rake
@@ -55,7 +55,7 @@ GEM
     rspec-support (3.5.0)
     slop (3.6.0)
     thread_safe (0.3.6)
-    tzinfo (1.2.2)
+    tzinfo (1.2.3)
       thread_safe (~> 0.1)
 
 PLATFORMS
