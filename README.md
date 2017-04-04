@@ -1,7 +1,7 @@
 
 # Monocle
 
-<img align="right" src="https://lh3.googleusercontent.com/SoJ_7q3soZxT97yNmlBx8eFqs7iXH_azC1H9vXCsglXq5GaR6rXCtf9Xzq42fJTAg7gL=s107"></img>Monocle helps you tame your database views by keeping the SQLs versioned neatly in your project and knowing when and how to migrate them if necessary. It knows how to deal with PostgreSQL materialized views and dependencies (view A points to view B) as well as regular views.
+Monocle helps you tame your database views by keeping the SQLs versioned neatly in your project and knowing when and how to migrate them if necessary. It knows how to deal with PostgreSQL materialized views and dependencies (view A points to view B) as well as regular views.
 
 Monocle works with or without Rails, all it assumes is you're using ActiveRecord. See _Usage_ for more details.
 
