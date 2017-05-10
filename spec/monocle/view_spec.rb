@@ -60,8 +60,10 @@ RSpec.describe Monocle::View do
   end
 
   describe "#create" do
-    let(:foo) { described_class.new('foo')  }
-    let(:bar) { described_class.new('bar')  }
+
+    before do
+      subject.drop
+    end
 
     it "calls #execute with #create_command" do
       subject.expects(:execute).with(subject.create_command)
@@ -73,11 +75,16 @@ RSpec.describe Monocle::View do
       expect(Monocle::Migration.exists?(version: subject.slug)).to eq true
     end
 
-    it "calls #create on its dependants" do
-      subject.stubs(:dependants).returns([foo, bar])
-      foo.expects(:create).once
-      bar.expects(:create).once
-      subject.create
+    context "with dependants" do
+      let(:foo) { described_class.new('foo')  }
+      let(:bar) { described_class.new('bar')  }
+
+      it "calls #create on its dependants" do
+        subject.stubs(:dependants).returns([foo, bar])
+        foo.expects(:create).once
+        bar.expects(:create).once
+        subject.create
+      end
     end
 
     context "when the version already exists" do
@@ -99,12 +106,35 @@ RSpec.describe Monocle::View do
     end
   end
 
+  describe "#refresh" do
+    it "triggers a materialized view refresh" do
+      subject.expects(:execute).with("REFRESH MATERIALIZED VIEW #{subject.name}")
+      subject.refresh
+    end
+
+    context "with a dependant materialized view" do
+      subject { described_class.new('child_with_no_data') }
+      let(:parent) { described_class.new('parent_with_no_data')  }
+      let(:list) {
+        { parent_with_no_data: parent, child_with_no_data: subject }
+      }
+      before do
+        Monocle.stubs(:list).returns(list)
+        parent.create
+        subject.create
+      end
+
+      it "triggers refresh on it if it needs to" do
+        expect(subject.refresh).to eq true
+      end
+    end
+  end
+
   describe "#migrate" do
     context "when you have a new view that depends on another new view that wasn't created yet" do
       subject { described_class.new('view_a') }
       it "creates the dependant view first, then creates it" do
         expect { subject.migrate }.not_to raise_error
-        binding.pry
         view_a = Monocle.fetch("view_a")
         view_b = Monocle.fetch("view_b")
         expect(Monocle.versions).to include(view_a.slug)

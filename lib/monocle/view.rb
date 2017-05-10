@@ -69,8 +69,21 @@ module Monocle
     def refresh(concurrently: false)
       # We don't refresh normal views
       return false unless materialized?
-      _concurrently = "CONCURRENTLY" if concurrently
-      execute "REFRESH MATERIALIZED VIEW #{_concurrently} #{name}"
+      _concurrently = " CONCURRENTLY" if concurrently
+      execute "REFRESH MATERIALIZED VIEW#{_concurrently} #{name}"
+      true
+    rescue ActiveRecord::StatementInvalid => e
+      # This view is trying to select from a different view that hasn't been
+      # populated.
+      if e.message =~ /PG::ObjectNotInPrerequisiteState/ &&
+         e.message.scan(/materialized view \"(\w+)\" has not been populated/) &&
+         list.keys.include?($1.to_sym)
+         warn "Can't refresh #{name} because it depends on #{$1} which hasn't been populated, refreshing that first..."
+         list.fetch($1.to_sym).refresh
+         retry
+      else
+        fail e
+      end
     end
 
     def slug

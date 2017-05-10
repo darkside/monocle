@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ar-monocle (0.1.3)
+    ar-monocle (0.1.5)
       activerecord (>= 4, < 6)
       activesupport (>= 4, < 6)
       rake
