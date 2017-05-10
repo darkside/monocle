@@ -81,7 +81,17 @@ With monocle, you decide when it's time to upgrade a view. So even if you have a
 
     $ rake monocle:bump[my_view_name]
     
-It will automatically bump that view's timestamp to the current time.
+### Refresh a view
+
+For materialized views, this makes it easy for you to trigger a refresh, say, in a cron job or something.
+
+    $ rake monocle:refresh[my_view_name]
+    
+### Refresh all views
+
+This is also available as a top level method for Monocle. It will refresh all your materialized views.
+
+    $ rake monocle:refresh_all
 
 ## Development
 
