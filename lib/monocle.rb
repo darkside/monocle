@@ -51,6 +51,13 @@ module Monocle
       fetch(view_name).refresh concurrently: concurrently
     end
 
+    def refresh_all
+      list.each do |key, view|
+        logger.info "Refreshing view #{key}..."
+        view.refresh # this will be a noop for non matviews
+      end
+    end
+
     # Enables you to configure things in a block, i.e
     # Monocle.configure do |config|
     #   config.logger = MyLogger.new

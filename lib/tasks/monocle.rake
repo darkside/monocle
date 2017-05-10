@@ -15,6 +15,16 @@ namespace :monocle do
     Rake::Task['db:structure:dump'].invoke
   end
 
+  desc "Refreshes a given monocle view"
+  task :refresh, [:view_name] => :environment do |t, args|
+    Monocle.refresh(args.view_name)
+  end
+
+  desc "Refreshes a given monocle view"
+  task :refresh_all => :environment do |t, args|
+    Monocle.refresh_all
+  end
+
   desc "Bump a monocle view's timestamp by name"
   task :bump, [:view_name] do |t, args|
     Rake::Task['environment'].invoke

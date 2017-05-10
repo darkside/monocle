@@ -54,6 +54,15 @@ RSpec.describe Monocle do
     end
   end
 
+  describe "#refresh_all" do
+    it "triggers refresh on all views" do
+      view1 = mock(refresh: true)
+      view2 = mock(refresh: true)
+      subject.stubs(:list).returns({foo: view1, bar: view2})
+      subject.refresh_all
+    end
+  end
+
   describe "#drop" do
     it "triggers drop on the view" do
       view_name = "lala"
