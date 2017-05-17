@@ -1,4 +1,4 @@
 -- Timestamp: 2016-10-15 00:00:00 -0300
-CREATE MATERIALIZED VIEW test_matview_uptodate AS
+CREATE MATERIALIZED VIEW matview_uptodate AS
   SELECT 1
 WITH NO DATA;

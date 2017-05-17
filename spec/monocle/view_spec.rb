@@ -8,9 +8,8 @@ RSpec.describe Monocle::View do
   end
 
   describe "#initialize" do
-    it "assigns to name and dependants" do
+    it "assigns to name" do
       expect(subject.name).to eq "foo"
-      expect(subject.dependants).to eq []
     end
   end
 
@@ -30,31 +29,31 @@ RSpec.describe Monocle::View do
   end
 
   describe "#drop" do
-    it "calls #execute with drop_command" do
-      subject.expects(:execute).with(subject.drop_command).once
-      expect(subject.drop).to eq true
+    context "with no dependants" do
+      it "drops the view from the database" do
+        expect(subject.drop).to eq true
+        expect(subject.exists?).to eq false
+      end
     end
 
     context "with a dependant views" do
-      subject { described_class.new('parent') }
-      let(:foo) { described_class.new('foo')  }
-      let(:bar) { described_class.new('bar')  }
+      subject { described_class.new('parent_with_no_data') }
+      let(:child) { described_class.new('child_with_no_data') }
 
       let(:list) {
-        { foo: foo, bar: bar, parent: subject }
+        { parent_with_no_data: subject, child_with_no_data: child }
       }
 
       before do
         Monocle.stubs(:list).returns(list)
-        subject.stubs(:execute).with(subject.drop_command).raises(ActiveRecord::StatementInvalid, "PG::DependentObjectsStillExist \n
-        foo depends on materialized view #{subject.name} \n
-        bar depends on materialized view #{subject.name}").then.returns(true)
+        subject.create
+        child.create
       end
 
       it "calls drop on them" do
-        foo.expects(:drop).once
-        bar.expects(:drop).once
-        subject.drop
+        expect(subject.drop).to eq true
+        expect(subject.exists?).to eq false
+        expect(child.exists?).to eq false
       end
     end
   end
@@ -65,9 +64,9 @@ RSpec.describe Monocle::View do
       subject.drop
     end
 
-    it "calls #execute with #create_command" do
-      subject.expects(:execute).with(subject.create_command)
+    it "creates the view in the database" do
       subject.create
+      expect(subject.exists?).to eq true
     end
 
     it "creates a new version" do
@@ -120,8 +119,8 @@ RSpec.describe Monocle::View do
       }
       before do
         Monocle.stubs(:list).returns(list)
-        parent.create
-        subject.create
+        subject.drop; parent.drop
+        parent.create; subject.create
       end
 
       it "triggers refresh on it if it needs to" do
@@ -158,6 +157,40 @@ RSpec.describe Monocle::View do
         subject.expects(:create).never
         subject.migrate
       end
+    end
+  end
+
+  describe "#exists?" do
+    context "with a view that haven't been created yet" do
+      subject { described_class.new('lala') }
+
+      it "returns false" do
+        expect(subject.exists?).to eq false
+      end
+    end
+
+    context "with a view that has been created" do
+      subject { described_class.new('matview_uptodate') }
+
+      it "returns false" do
+        subject.create
+        expect(subject.exists?).to eq true
+      end
+    end
+  end
+
+  describe "#get_dependants_from_pg" do
+    let(:view_a) { described_class.new('view_a') } # queries view b
+    let(:view_b) { described_class.new('view_b') }
+
+    before do
+      subject.stubs(:list).returns({view_a: view_a, view_b: view_b})
+    end
+
+    it "returns a list of dependants without the original view name" do
+      deps = view_b.send(:get_dependants_from_pg).map(&:name)
+      expect(deps).to include('view_a')
+      expect(deps).not_to include('view_b')
     end
   end
 
