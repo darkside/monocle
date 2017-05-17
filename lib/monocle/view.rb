@@ -18,20 +18,9 @@ module Monocle
 
     def drop
       debug "Dropping #{name}..."
+      get_dependants_from_pg.each(&:drop) # drop any existing dependants
       execute drop_command
       true
-    rescue ActiveRecord::StatementInvalid => e
-      # We have dependants, can't drop this directly.
-      if e.message =~ /PG::DependentObjectsStillExist/
-        # Find the views in the main list, drop them
-        self.dependants = get_dependants_from_error e
-        debug "Can't drop #{name}, it has dependants: #{dependants.map(&:name).join(', ')}"
-        dependants.each &:drop
-        # And try this again
-        retry
-      else
-        fail e
-      end
     end
 
     def create
@@ -103,11 +92,50 @@ module Monocle
       @path_for_sql ||= File.join views_path, "#{name}.sql"
     end
 
+    def exists?
+      execute(check_if_view_exists_sql).entries.map(&:values).flatten.first
+    end
+
     protected
 
+    def check_if_view_exists_sql
+      <<-SQL
+        SELECT count(*) > 0
+        FROM pg_catalog.pg_class c
+        JOIN pg_namespace n ON n.oid = c.relnamespace
+        WHERE c.relkind in ('m','v')
+        AND n.nspname = 'public'
+        AND c.relname = '#{name}';
+      SQL
+    end
+
+    def get_dependants_from_pg
+      map_dependants(execute(find_dependants_sql).entries.map(&:values).flatten - [name])
+    end
+
+    def map_dependants(deps)
+      deps.map { |d| list[d.to_sym] }.compact
+    end
+
+    def find_dependants_sql
+      <<-SQL
+      WITH RECURSIVE vlist AS (
+          SELECT c.oid::REGCLASS AS view_name
+            FROM pg_class c
+           WHERE c.relname = '#{name}'
+           UNION ALL
+          SELECT DISTINCT r.ev_class::REGCLASS AS view_name
+            FROM pg_depend d
+            JOIN pg_rewrite r ON (r.oid = d.objid)
+            JOIN vlist ON (vlist.view_name = d.refobjid)
+           WHERE d.refobjsubid != 0
+      )
+      SELECT * FROM vlist;
+      SQL
+    end
+
     def get_dependants_from_error(e)
-      e.message.scan(/(\w+) depends on.+view #{name}/).
-      flatten.map { |s| list.fetch s.to_sym }
+      map_dependants e.message.scan(/(\w+) depends on.+view #{name}/).flatten
     end
 
     def execute(sql)
