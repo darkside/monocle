@@ -18,7 +18,8 @@ module Monocle
 
     def drop
       debug "Dropping #{name}..."
-      get_dependants_from_pg.each(&:drop) # drop any existing dependants
+      self.dependants = get_dependants_from_pg
+      dependants.each &:drop
       execute drop_command
       true
     end
